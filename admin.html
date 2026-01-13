@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel Admin - Donalú</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="admin-styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body class="admin-body">
+    <!-- NAVBAR ADMIN -->
+    <nav class="navbar-admin">
+        <div class="container">
+            <div class="logo-admin">
+                <h1>Donalú Admin</h1>
+            </div>
+            <div class="admin-user">
+                <span id="user-info">Admin</span>
+                <button class="btn-secondary" onclick="mostrarSecao('configuracoes')"><i class="fas fa-cog"></i> Configurações</button>
+                <button class="btn-logout" onclick="fazerLogout()"><i class="fas fa-sign-out-alt"></i> Sair</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- SIDEBAR MENU -->
+    <div class="admin-container">
+        <aside class="sidebar-admin">
+            <ul class="menu-admin">
+                <li><a href="#" onclick="mostrarSecao('dashboard')" class="menu-item active"><i class="fas fa-chart-line"></i> Dashboard</a></li>
+                <li><a href="#" onclick="mostrarSecao('produtos')" class="menu-item"><i class="fas fa-box"></i> Produtos</a></li>
+                <li><a href="#" onclick="mostrarSecao('pedidos')" class="menu-item"><i class="fas fa-shopping-bag"></i> Pedidos</a></li>
+                <li><a href="#" onclick="mostrarSecao('financeiro')" class="menu-item"><i class="fas fa-dollar-sign"></i> Financeiro</a></li>
+                <li><a href="#" onclick="mostrarSecao('configuracoes')" class="menu-item"><i class="fas fa-cog"></i> Configurações</a></li>
+            </ul>
+        </aside>
+
+        <!-- CONTEÚDO ADMIN -->
+        <main class="admin-content">
+            <!-- DASHBOARD -->
+            <section id="dashboard" class="secao-admin active">
+                <h2>Dashboard</h2>
+                <div class="dashboard-grid">
+                    <div class="card-dashboard">
+                        <i class="fas fa-box"></i>
+                        <h3 id="total-produtos">0</h3>
+                        <p>Produtos Cadastrados</p>
+                    </div>
+                    <div class="card-dashboard">
+                        <i class="fas fa-shopping-bag"></i>
+                        <h3 id="total-pedidos">0</h3>
+                        <p>Pedidos Recebidos</p>
+                    </div>
+                    <div class="card-dashboard">
+                        <i class="fas fa-dollar-sign"></i>
+                        <h3 id="total-vendas">R$ 0,00</h3>
+                        <p>Total de Vendas</p>
+                    </div>
+                    <div class="card-dashboard">
+                        <i class="fas fa-users"></i>
+                        <h3 id="total-clientes">0</h3>
+                        <p>Clientes</p>
+                    </div>
+                </div>
+
+                <div class="ultimas-vendas">
+                    <h3>Últimos Pedidos</h3>
+                    <div id="lista-ultimos-pedidos" class="lista-pedidos">
+                        <p style="text-align: center; color: #999;">Nenhum pedido registrado</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- PRODUTOS -->
+            <section id="produtos" class="secao-admin">
+                <div class="secao-header">
+                    <h2>Gerenciar Produtos</h2>
+                    <button class="btn-primary" onclick="abrirFormAdicionar()"><i class="fas fa-plus"></i> Novo Produto</button>
+                </div>
+
+                <!-- FORMULÁRIO ADICIONAR/EDITAR -->
+                <div id="form-container" class="form-container" style="display: none;">
+                    <h3 id="form-titulo">Novo Produto</h3>
+                    <form id="form-produto" onsubmit="salvarProduto(event)">
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label>Nome do Tecido *</label>
+                                <input type="text" id="prod-nome" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Categoria *</label>
+                                <select id="prod-categoria" required>
+                                    <option value="">Selecione uma categoria</option>
+                                    <option value="algodao">Algodão</option>
+                                    <option value="poliester">Poliéster</option>
+                                    <option value="linho">Linho</option>
+                                    <option value="seda">Seda</option>
+                                    <option value="misto">Misto</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Preço de Venda (R$) *</label>
+                                <input type="number" id="prod-preco" step="0.01" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Preço de Custo (R$) *</label>
+                                <input type="number" id="prod-custo" step="0.01" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Preço Promocional (R$)</label>
+                                <input type="number" id="prod-preco-promo" step="0.01">
+                            </div>
+                            <div class="form-group">
+                                <label>Estoque *</label>
+                                <input type="number" id="prod-estoque" value="0" required>
+                            </div>
+                        </div>
+
+                        <div class="form-section">
+                            <h4>Dimensões do Produto</h4>
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label>Largura (cm)</label>
+                                    <input type="number" id="prod-largura" step="0.1">
+                                </div>
+                                <div class="form-group">
+                                    <label>Altura (cm)</label>
+                                    <input type="number" id="prod-altura" step="0.1">
+                                </div>
+                                <div class="form-group">
+                                    <label>Comprimento (cm)</label>
+                                    <input type="number" id="prod-comprimento" step="0.1">
+                                </div>
+                                <div class="form-group">
+                                    <label>Peso (kg)</label>
+                                    <input type="number" id="prod-peso" step="0.1">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-section">
+                            <h4>Variações de Cores</h4>
+                            <div id="cores-container" class="cores-container">
+                                <div class="cor-item">
+                                    <input type="text" placeholder="Nome da cor (ex: Vermelho)" class="input-cor-nome">
+                                    <input type="color" class="input-cor-picker">
+                                    <button type="button" onclick="removerCor(this)" class="btn-remover-cor"><i class="fas fa-trash"></i></button>
+                                </div>
+                            </div>
+                            <button type="button" onclick="adicionarCor()" class="btn-secundario-pequeno"><i class="fas fa-plus"></i> Adicionar Cor</button>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Descrição *</label>
+                            <textarea id="prod-desc" rows="4" required></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Imagem do Produto</label>
+                            <div class="upload-area" id="upload-area">
+                                <i class="fas fa-cloud-upload-alt"></i>
+                                <p>Clique ou arraste a imagem aqui</p>
+                                <input type="file" id="prod-imagem-file" accept="image/*" style="display: none;">
+                            </div>
+                            <img id="preview-imagem" style="display: none; max-width: 200px; margin-top: 1rem;">
+                        </div>
+
+                        <div id="margem-info" class="info-margem" style="display: none;">
+                            <p><strong>Margem de Lucro:</strong> <span id="margem-percentual">0%</span></p>
+                            <p><strong>Lucro por Unidade:</strong> R$ <span id="lucro-unitario">0,00</span></p>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="submit" class="btn-primary"><i class="fas fa-save"></i> Salvar Produto</button>
+                            <button type="button" class="btn-secondary" onclick="fecharFormAdicionar()"><i class="fas fa-times"></i> Cancelar</button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- TABELA DE PRODUTOS -->
+                <div class="tabela-produtos">
+                    <table id="tabela-admin" class="tabela-admin">
+                        <thead>
+                            <tr>
+                                <th>Imagem</th>
+                                <th>Nome</th>
+                                <th>Categoria</th>
+                                <th>Preço</th>
+                                <th>Estoque</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="corpo-tabela">
+                            <tr><td colspan="6" style="text-align: center; color: #999;">Carregando produtos...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- PEDIDOS -->
+            <section id="pedidos" class="secao-admin">
+                <div class="secao-header">
+                    <h2>Registrar Venda</h2>
+                    <button class="btn-primary" onclick="abrirFormVenda()"><i class="fas fa-plus"></i> Nova Venda</button>
+                </div>
+
+                <!-- FORMULÁRIO VENDA -->
+                <div id="form-venda-container" class="form-container" style="display: none;">
+                    <h3>Registrar Nova Venda</h3>
+                    <form id="form-venda" onsubmit="salvarVenda(event)">
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label>Data da Venda *</label>
+                                <input type="date" id="venda-data" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Cliente (WhatsApp/Nome)</label>
+                                <input type="text" id="venda-cliente" placeholder="(11) 99999-9999 ou Nome">
+                            </div>
+                            <div class="form-group">
+                                <label>Método de Pagamento *</label>
+                                <select id="venda-pagamento" required>
+                                    <option value="">Selecione</option>
+                                    <option value="dinheiro">Dinheiro</option>
+                                    <option value="debito">Débito</option>
+                                    <option value="credito">Crédito</option>
+                                    <option value="pix">PIX</option>
+                                    <option value="transferencia">Transferência</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <h4>Adicionar Produtos</h4>
+                        <div class="search-produto">
+                            <input type="text" id="busca-produto" placeholder="🔍 Buscar produto..." onkeyup="buscarProduto()">
+                        </div>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label>Produto *</label>
+                                <select id="venda-produto-select" onchange="carregarVariacoesProduto()">
+                                    <option value="">Selecione um produto</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Cor/Variação</label>
+                                <select id="venda-cor-select">
+                                    <option value="">Sem variação</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Quantidade *</label>
+                                <input type="number" id="venda-quantidade" min="0.1" step="0.1" value="1">
+                            </div>
+                            <div class="form-group">
+                                <label>Preço Unit. (R$)</label>
+                                <input type="number" id="venda-preco-item" step="0.01" readonly>
+                            </div>
+                            <div class="form-group">
+                                <label>&nbsp;</label>
+                                <button type="button" onclick="adicionarItemVenda()" class="btn-add-item">
+                                    <i class="fas fa-plus-circle"></i> Adicionar
+                                </button>
+                            </div>
+                        </div>
+
+                        <h4>Itens da Venda</h4>
+                        <div id="itens-venda-container" class="itens-venda">
+                            <p style="text-align: center; color: #999;">Nenhum item adicionado</p>
+                        </div>
+
+                        <div class="resumo-venda">
+                            <div class="resumo-linha">
+                                <span>Subtotal:</span>
+                                <span>R$ <span id="venda-subtotal">0,00</span></span>
+                            </div>
+                            <div class="resumo-linha">
+                                <label>Desconto (%):</label>
+                                <input type="number" id="venda-desconto" step="0.01" value="0" onchange="calcularTotalVenda()" style="width: 100px;">
+                            </div>
+                            <div class="resumo-linha total">
+                                <span><strong>Total:</strong></span>
+                                <span><strong>R$ <span id="venda-total">0,00</span></strong></span>
+                            </div>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="submit" class="btn-primary"><i class="fas fa-check"></i> Finalizar Venda</button>
+                            <button type="button" class="btn-secondary" onclick="fecharFormVenda()"><i class="fas fa-times"></i> Cancelar</button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- HISTÓRICO DE VENDAS -->
+                <div class="historico-vendas">
+                    <h3>Histórico de Vendas</h3>
+                    <div class="filtros-venda">
+                        <input type="date" id="filtro-venda-data" onchange="filtrarVendas()" placeholder="Filtrar por data">
+                        <select id="filtro-venda-metodo" onchange="filtrarVendas()">
+                            <option value="">Todos os métodos</option>
+                            <option value="dinheiro">Dinheiro</option>
+                            <option value="debito">Débito</option>
+                            <option value="credito">Crédito</option>
+                            <option value="pix">PIX</option>
+                            <option value="transferencia">Transferência</option>
+                        </select>
+                        <button class="btn-primario-pequeno" onclick="exportarVendas()"><i class="fas fa-download"></i> Exportar CSV</button>
+                    </div>
+                    <table class="tabela-vendas">
+                        <thead>
+                            <tr>
+                                <th>Data</th>
+                                <th>Cliente</th>
+                                <th>Produtos</th>
+                                <th>Método</th>
+                                <th>Subtotal</th>
+                                <th>Desconto</th>
+                                <th>Total</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="corpo-vendas">
+                            <tr><td colspan="8" style="text-align: center; color: #999;">Nenhuma venda registrada</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- FINANCEIRO -->
+            <section id="financeiro" class="secao-admin">
+                <h2>Relatório Financeiro</h2>
+                <div class="financeiro-resumo">
+                    <div class="card-financeiro">
+                        <h3>Total de Vendas</h3>
+                        <p class="valor" id="fin-total-vendas">R$ 0,00</p>
+                    </div>
+                    <div class="card-financeiro">
+                        <h3>Número de Pedidos</h3>
+                        <p class="valor" id="fin-num-pedidos">0</p>
+                    </div>
+                    <div class="card-financeiro">
+                        <h3>Ticket Médio</h3>
+                        <p class="valor" id="fin-ticket-medio">R$ 0,00</p>
+                    </div>
+                </div>
+                <div class="historico-financeiro">
+                    <h3>Histórico de Vendas</h3>
+                    <table class="tabela-financeira">
+                        <thead>
+                            <tr>
+                                <th>Data</th>
+                                <th>Cliente</th>
+                                <th>Produto</th>
+                                <th>Quantidade</th>
+                                <th>Valor</th>
+                            </tr>
+                        </thead>
+                        <tbody id="corpo-financeiro">
+                            <tr><td colspan="5" style="text-align: center; color: #999;">Nenhuma venda registrada</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- CONFIGURAÇÕES -->
+            <section id="configuracoes" class="secao-admin">
+                <h2>Configurações</h2>
+                <div class="config-group">
+                    <h3>Informações da Loja</h3>
+                    <div class="form-group">
+                        <label>WhatsApp para Contato</label>
+                        <input type="text" id="config-whatsapp" placeholder="+55 51 99583-7023">
+                    </div>
+                    <div class="form-group">
+                        <label>Email da Loja</label>
+                        <input type="email" id="config-email" placeholder="contato@donalu.com">
+                    </div>
+                    <div class="form-group">
+                        <label>Segundas a Sexta</label>
+                        <input type="text" id="config-horario-seg-sex" placeholder="09:00 - 18:30">
+                    </div>
+                    <div class="form-group">
+                        <label>Sábado</label>
+                        <input type="text" id="config-horario-sab" placeholder="09:00 - 13:00">
+                    </div>
+                    <button class="btn-primary" onclick="salvarConfiguracoes()"><i class="fas fa-save"></i> Salvar Configurações</button>
+                </div>
+
+                <div class="config-group mt-2">
+                    <h3>Integração com Google Sheets</h3>
+                    <div class="form-group">
+                        <label>Endpoint do Web App (Apps Script)</label>
+                        <input type="url" id="config-sheets-endpoint" placeholder="https://script.google.com/macros/s/SEU-ENDPOINT/exec">
+                    </div>
+                    <p style="color: var(--text-secondary); font-size: 0.9rem;">Use um Web App do Google Apps Script com acesso "Qualquer pessoa com o link". Eu envio os dados como JSON com os campos <strong>action</strong> e <strong>data</strong>.</p>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="app.js"></script>
+    <script src="admin.js"></script>
+</body>
+</html>

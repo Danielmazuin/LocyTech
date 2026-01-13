@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Donalú - Tecidos Premium</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- NAVBAR -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="logo">
+                <h1>Donalú</h1>
+                <p class="tagline">TECIDOS</p>
+            </div>
+            <ul class="nav-links">
+                <li><a href="#home">Início</a></li>
+                <li><a href="#sobre">Sobre</a></li>
+                <li><a href="#produtos">Produtos</a></li>
+                <li><button class="btn-login" onclick="abrirLogin()"><i class="fas fa-user"></i> Admin</button></li>
+                <li><button class="btn-carrinho" onclick="abrirCarrinho()"><i class="fas fa-shopping-cart"></i> <span id="qtd-carrinho">0</span></button></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- HERO SECTION - COMPACTO -->
+    <section id="home" class="hero">
+        <div class="hero-content">
+            <h2>Tecidos Premium</h2>
+            <p>Qualidade e Estilo para Seus Projetos</p>
+            <button class="btn-primary" onclick="document.getElementById('produtos').scrollIntoView({ behavior: 'smooth' })">
+                Ver Catálogo
+            </button>
+        </div>
+    </section>
+
+    <!-- SOBRE A LOJA -->
+    <section id="sobre" class="sobre">
+        <div class="container">
+            <div class="sobre-grid">
+                <div class="sobre-card">
+                    <i class="fas fa-heart"></i>
+                    <h3>Qualidade Premium</h3>
+                    <p>Tecidos selecionados com cuidado, garantindo durabilidade e beleza</p>
+                </div>
+                <div class="sobre-card">
+                    <i class="fas fa-truck"></i>
+                    <h3>Entrega Rápida</h3>
+                    <p>Envio rápido e seguro para todo o país</p>
+                </div>
+                <div class="sobre-card">
+                    <i class="fas fa-headset"></i>
+                    <h3>Atendimento 24/7</h3>
+                    <p>Estamos sempre prontos para ajudar suas dúvidas</p>
+                </div>
+                <div class="sobre-card">
+                    <i class="fas fa-award"></i>
+                    <h3>Garantia</h3>
+                    <p>Satisfação garantida ou seu dinheiro de volta</p>
+                </div>
+            </div>
+
+            <div class="horarios-section">
+                <h2>Horários de Funcionamento</h2>
+                <div class="horarios-grid">
+                    <div class="horario-item">
+                        <h4>📅 Segunda a Sexta</h4>
+                        <p>09:00 - 18:30</p>
+                    </div>
+                    <div class="horario-item">
+                        <h4>📅 Sábado</h4>
+                        <p>09:00 - 13:00</p>
+                    </div>
+                    <div class="horario-item">
+                        <h4>📅 Domingo</h4>
+                        <p>Fechado</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- PRODUTOS -->
+    <section id="produtos" class="produtos">
+        <div class="container">
+            <h2>Nossos Produtos</h2>
+            
+            <!-- Filtros e Busca -->
+            <div class="filtros">
+                <input type="text" id="busca" placeholder="🔍 Buscar tecidos..." onkeyup="filtrarProdutos()">
+                <select id="categoria" onchange="filtrarProdutos()">
+                    <option value="">Todas as Categorias</option>
+                    <option value="algodao">Algodão</option>
+                    <option value="poliester">Poliéster</option>
+                    <option value="linho">Linho</option>
+                    <option value="seda">Seda</option>
+                    <option value="misto">Misto</option>
+                </select>
+            </div>
+
+            <!-- Grid de Produtos -->
+            <div id="grid-produtos" class="grid-produtos">
+                <!-- Produtos serão carregados aqui via JS -->
+                <div class="loading">Carregando produtos...</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- MODAL LOGIN -->
+    <div id="modal-login" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="fecharLogin()">&times;</span>
+            <h2>Acesso do Proprietário</h2>
+            <form onsubmit="fazerLogin(event)">
+                <input type="email" id="email" placeholder="Email" required>
+                <input type="password" id="senha" placeholder="Senha" required>
+                <button type="submit" class="btn-primary">Login</button>
+            </form>
+            <p class="info-login">Contato: +55 51 99583-7023</p>
+        </div>
+    </div>
+
+    <!-- SIDEBAR CARRINHO -->
+    <div id="sidebar-carrinho" class="sidebar-carrinho">
+        <div class="sidebar-header">
+            <h2>🛒 Meu Carrinho</h2>
+            <span class="close-sidebar" onclick="fecharCarrinho()">&times;</span>
+        </div>
+        <div id="itens-carrinho" class="itens-carrinho">
+            <p style="text-align: center; color: #999; padding: 2rem;">Carrinho vazio</p>
+        </div>
+        <div class="resumo-carrinho">
+            <h3>Total: R$ <span id="total-carrinho">0.00</span></h3>
+            <button class="btn-primary btn-comprar" onclick="finalizarCompra()">
+                <i class="fab fa-whatsapp"></i> Finalizar via WhatsApp
+            </button>
+        </div>
+    </div>
+
+    <!-- OVERLAY CARRINHO -->
+    <div id="overlay-carrinho" class="overlay-carrinho" onclick="fecharCarrinho()"></div>
+
+    <!-- BOTÃO FLUTUANTE WHATSAPP -->
+    <button class="btn-whatsapp-flutuante" onclick="abrirWhatsapp('oi')">
+        <i class="fab fa-whatsapp"></i>
+    </button>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2026 Donalú Tecidos. Todos os direitos reservados.</p>
+            <p>Desenvolvido com <i class="fas fa-heart"></i> para sua loja</p>
+        </div>
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+</html>
